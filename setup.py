@@ -4,6 +4,9 @@
 
 from setuptools import setup, find_packages
 
+with open('README.md') as f:
+    readme = f.read()
+
 setup(
     name="cnm-usage",
     version='0.1',
@@ -15,8 +18,10 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'get_usage = cnm-usage.cnm-usage:main'
+            'get_usage = cnm-usage.cli:main'
         ],
     },
     author="Sal Koritz",
+    description='cli app to pull usage data from cnMaestro API',
+    long_description=readme,
 )
