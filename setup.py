@@ -16,11 +16,11 @@ setup(
     install_requires=[
         'Click',
     ],
-    entry_points={
-        'console_scripts': [
-            'get_usage = cnm-usage.cli:main'
-        ],
-    },
+    entry_points='''
+        [console_scripts]
+        get_usage=cnm-usage.cnm-usage.cli:main
+    ''',
+
     author="Sal Koritz",
     description='cli app to pull usage data from cnMaestro API',
     long_description=readme,
