@@ -7,7 +7,7 @@ import auth
 
 class ClientID(click.ParamType):
     name = 'client-id'
-
+    '''
     def convert(self, value, param, ctx):
         found = re.match(r'[0-9a-f]{16}', value)
 
@@ -19,10 +19,12 @@ class ClientID(click.ParamType):
             )
 
         return value
+    '''
 
 class ClientSecret(click.ParamType):
     name = 'client-secret'
 
+    '''
     def convert(self, value, param, ctx):
         found = re.match(r'[0-9a-f]{30}', value)
 
@@ -34,6 +36,7 @@ class ClientSecret(click.ParamType):
             )
 
         return value
+    '''
 
 @click.group()
 @click.option(
@@ -47,9 +50,9 @@ class ClientSecret(click.ParamType):
     help='Client secret key for the cnMaestro API',
 )
 @click.option(
-    '--auth-file', '-a',
+    '--config-file', '-c',
     type=click.Path(),
-    default='~/auth.cfg',
+    default='./auth.cfg',
 )
 @click.pass_context
 def main(ctx, client_id, client_secret, config_file):
@@ -93,9 +96,7 @@ def config(ctx):
     )
 
     with open(config_file, 'w') as cfg:
-        cfg.write(client_id)
-    with open(config_file, 'a') as cfg:
-        cfg.write(client_secret)
+        cfg.writelines([client_id, '\n'+client_secret])
 
 
 
