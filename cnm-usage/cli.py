@@ -1,3 +1,9 @@
+'''
+    CLI for cnm-usage app
+    example command:
+        > python cli.py -i <client id> -s <client secret> request <host ip>
+'''
+
 import re
 import os
 import click
@@ -38,6 +44,12 @@ class ClientSecret(click.ParamType):
         return value
     '''
 
+
+'''
+Define command options to pass client id, client secret, and a config file.
+Options are optional, so the user can pass in either a client id and a client secret
+or a config file name.
+'''
 @click.group()
 @click.option(
     '--client-id', '-i',
@@ -47,23 +59,19 @@ class ClientSecret(click.ParamType):
 @click.option(
     '--client-secret', '-s',
     type=ClientSecret(),
-    help='Client secret key for the cnMaestro API',
+    help='Client secret for the cnMaestro API',
 )
 @click.option(
     '--config-file', '-c',
     type=click.Path(),
     default='./auth.cfg',
 )
+
 @click.pass_context
 def main(ctx, client_id, client_secret, config_file):
     """
-    A little weather tool that shows you the current weather in a LOCATION of
-    your choice. Provide the city name and optionally a two-digit country code.
-    Here are two examples:
-    1. London,UK
-    2. Canmore
-    You need a valid API key from OpenWeatherMap for the tool to work. You can
-    sign up for a free account at https://openweathermap.org/appid.
+    Start of program.
+    Creates context object (ctx) from options or config file.
     """
     filename = os.path.expanduser(config_file)
 
@@ -82,7 +90,8 @@ def main(ctx, client_id, client_secret, config_file):
 @click.pass_context
 def config(ctx):
     """
-    Store configuration values in a file, e.g. the API key for OpenWeatherMap.
+    Prompts user to enter client id and client secret, stores these values in a file.
+    Filename defined by the --config-file option
     """
     config_file = ctx.obj['config_file']
 
@@ -99,13 +108,12 @@ def config(ctx):
         cfg.writelines([client_id, '\n'+client_secret])
 
 
-
 @main.command()
 @click.argument('host_ip')
 @click.pass_context
 def request(ctx, host_ip):
     """
-    Show the current weather for a location using OpenWeatherMap data.
+    Generate and authenticate an API access token.
     """
     client_id = ctx.obj['client_id']
     client_secret = ctx.obj['client_secret']
