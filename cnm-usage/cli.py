@@ -64,7 +64,7 @@ or a config file name.
 @click.option(
     '--config-file', '-c',
     type=click.Path(),
-    default='./auth.cfg',
+    default='./.auth.cfg',
 )
 
 @click.pass_context
