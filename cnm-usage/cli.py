@@ -8,6 +8,7 @@ import re
 import os
 import click
 import requests
+import json
 
 import auth
 
@@ -64,7 +65,7 @@ or a config file name.
 @click.option(
     '--config-file', '-c',
     type=click.Path(),
-    default='./.auth.cfg',
+    default='./config.json',
 )
 
 @click.pass_context
@@ -75,15 +76,38 @@ def main(ctx, client_id, client_secret, config_file):
     """
     filename = os.path.expanduser(config_file)
 
+    if not os.path.exists(filename):
+        click.confirm("{} does not exist. Do you want to continue?", abort=True)
+        config = {
+                    "client_id": "",
+                    "client_secret": "",
+                    "params": {
+                        "fields": "",
+                        "start_time": "",
+                        "stop_time": "",
+                    }
+                 }
+
+        with open(config_file, 'w') as cfg:
+            json.dump(config, cfg)
+
     if not (client_id or client_secret) and os.path.exists(filename):
         with open(filename) as cfg:
-            client_id = cfg.readline()
-            client_secret = cfg.readline()
+            data = json.load(cfg)
+
+            client_id = data['client_id']
+            client_secret = data['client_secret']
+            fields = data['params']['fields']
+            start_time = data['params']['start_time']
+            stop_time = data['params']['stop_time']
 
     ctx.obj = {
         'client_id': client_id,
         'client_secret': client_secret,
         'config_file': filename,
+        'fields': fields,
+        'start_time': start_time,
+        'stop_time': stop_time,
     }
 
 @main.command()
@@ -103,9 +127,32 @@ def config(ctx):
         "Please enter your Client Secret",
         default=ctx.obj.get('client_secret', '')
     )
+    fields = click.prompt(
+        "Please enter the fields to retrieve",
+        default=ctx.obj.get('fields', '')
+    )
+    start_time = click.prompt(
+        "Please enter the start time",
+        default=ctx.obj.get('start_time', '')
+    )
+    stop_time = click.prompt(
+        "Please enter the stop time",
+        default=ctx.obj.get('stop_time', '')
+    )
+
+    config = {
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "params": {
+                    "fields": fields,
+                    "start_time": start_time,
+                    "stop_time": stop_time,
+                }
+             }
 
     with open(config_file, 'w') as cfg:
-        cfg.writelines([client_id, '\n'+client_secret])
+        json.dump(config, cfg)
+        #cfg.writelines([client_id, '\n'+client_secret])
 
 
 @main.command()
@@ -119,7 +166,7 @@ def request(ctx, host_ip):
     client_secret = ctx.obj['client_secret']
 
     access_token = auth.generate_api_session(host_ip, client_id, client_secret)
-    print(f"Nice!")
+    print("Nice!")
 
 
 if __name__ == "__main__":
