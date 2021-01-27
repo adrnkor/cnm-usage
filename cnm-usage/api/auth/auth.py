@@ -2,7 +2,7 @@
 # reworked by Sal K (Dec 2020/Jan 2021)
 
 # "API test code for cnMaestro that demonstrates session establishment and API
-# calls. The client connects to cnMaestro using the Client Id and Client
+# api. The client connects to cnMaestro using the Client Id and Client
 # Secret downloaded from the Client API page in the cnMaestro UI. The Client
 # receives a URL, Access Token, and Expiration Interval (in seconds)
 # defining how long the token is valid. The URL and Access Token are used
@@ -60,6 +60,7 @@ def generate_api_session(host, client_id, client_secret):
     print('\nRetrieve Access Parameters')
     access_token, expires_in = get_access_parameters(host, client_id, client_secret)
     print('Success: access_token ({}) expires_in ({})\n'.format(access_token, expires_in))
+
 
     # Validate time remaining for the access token
     print('Validating expiration time')

@@ -4,13 +4,12 @@
         > python cli.py -i <client id> -s <client secret> request <host ip>
 '''
 
-import re
 import os
 import click
-import requests
 import json
 
-import auth
+import api
+
 
 class ClientID(click.ParamType):
     name = 'client-id'
@@ -44,7 +43,6 @@ class ClientSecret(click.ParamType):
 
         return value
     '''
-
 
 '''
 Define command options to pass client id, client secret, and a config file.
@@ -165,8 +163,11 @@ def request(ctx, host_ip):
     client_id = ctx.obj['client_id']
     client_secret = ctx.obj['client_secret']
 
-    access_token = auth.generate_api_session(host_ip, client_id, client_secret)
+    #api_call = api.Call(host_ip, )
+    access_token = api.auth.generate_api_session(host_ip, client_id, client_secret)
     print("Nice!")
+
+
 
 
 if __name__ == "__main__":
