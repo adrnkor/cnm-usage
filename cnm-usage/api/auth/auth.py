@@ -18,10 +18,6 @@ from datetime import datetime, timedelta
 # TEST: 208.93.184.17
 # TEST CREDS: (ID) LSaNKGIUtYfJO4Uq (SECRET) SDtBmkPPfx0C6CfBfMIbqYNM2p1C1z
 
-HOST = '208.93.184.19'
-CLIENT_ID = 'BKKKzPEYA6n3KtOJ'
-CLIENT_SECRET = '37kxAfdfcnPkE7UitBNLRoKgB0cY13'
-
 def check_http_return(section, url, code, request):
     if int(code) != 200:
         print('{0} failed with HTTP status {1}'.format(section, code))
