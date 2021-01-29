@@ -7,9 +7,7 @@
 import os
 import click
 import json
-
 import api
-
 
 class ClientID(click.ParamType):
     name = 'client-id'
@@ -162,12 +160,11 @@ def request(ctx, host_ip):
     """
     client_id = ctx.obj['client_id']
     client_secret = ctx.obj['client_secret']
+    params = ctx.obj['params']
 
-    #api_call = api.Call(host_ip, )
-    access_token = api.auth.generate_api_session(host_ip, client_id, client_secret)
+    api_call = api.Call(host_ip, client_id, client_secret, params)
+    # access_token = api.auth.generate_api_session(host_ip, client_id, client_secret)
     print("Nice!")
-
-
 
 
 if __name__ == "__main__":
