@@ -1,13 +1,16 @@
 '''
-    CLI for cnm-usage app
+    CLI for cnm_usage app
     example command:
         > python cli.py -i <client id> -s <client secret> request <host ip>
+        -i LSaNKGIUtYfJO4Uq -s SDtBmkPPfx0C6CfBfMIbqYNM2p1C1z request 208.93.184.17
 '''
 
 import os
+import sys
 import click
 import json
-import api
+from cnm_usage import api
+from datetime import datetime, timedelta
 
 class ClientID(click.ParamType):
     name = 'client-id'
@@ -42,6 +45,9 @@ class ClientSecret(click.ParamType):
         return value
     '''
 
+class Fields(click.ParamType):
+    name = 'fields'
+
 '''
 Define command options to pass client id, client secret, and a config file.
 Options are optional, so the user can pass in either a client id and a client secret
@@ -61,41 +67,74 @@ or a config file name.
 @click.option(
     '--config-file', '-c',
     type=click.Path(),
-    default='./config.json',
+    default='~/config.json',
+    help="Specify config file to read from. Default: ~/config.json"
+)
+@click.option(
+    '--fields', '-f',
+    type=str,
+    default='name,timestamp,radio.dl_kbits,radio.ul_kbits',
+    help="Fields to pull from the cnMaestro API"
+)
+
+@click.option(
+    '--start', '-a',
+    type=str,
+    default=(datetime.now() - timedelta(1)).strftime('%Y-%m-%d') + 'T00:00:00-05:00',
+)
+
+@click.option(
+    '--stop', '-o',
+    type=str,
+    default=(datetime.now() - timedelta(1)).strftime('%Y-%mw-%d') + 'T23:00:00-05:00',
 )
 
 @click.pass_context
-def main(ctx, client_id, client_secret, config_file):
+def main(ctx, client_id, client_secret, config_file, fields, start, stop):
     """
     Start of program.
     Creates context object (ctx) from options or config file.
     """
     filename = os.path.expanduser(config_file)
 
+    if os.path.exists(filename):
+        if not (client_id and client_secret):
+            with open(filename) as cfg:
+                data = json.load(cfg)
+
+                client_id = data['client_id']
+                client_secret = data['client_secret']
+                fields = data['params']['fields']
+                start_time = data['params']['start_time']
+                stop_time = data['params']['stop_time']
+        else:
+            print("{} exists, but a different client id and client secret was supplied.".format(filename))
+            with open(filename) as cfg:
+                data = json.load(cfg)
+
+                fields = data['params']['fields']
+                start_time = data['params']['start_time']
+                stop_time = data['params']['stop_time']
+
     if not os.path.exists(filename):
-        click.confirm("{} does not exist. Do you want to continue?", abort=True)
-        config = {
-                    "client_id": "",
-                    "client_secret": "",
-                    "params": {
-                        "fields": "",
-                        "start_time": "",
-                        "stop_time": "",
-                    }
-                 }
+        if not (client_id and client_secret):
+            print("{} does not exist. Aborting...".format(filename))
+            sys.exit()
+        else:
+            print("{} does not exist. A config file can be created.".format(filename))
+            click.confirm("Do you want to continue?", abort=True)
+            config = {
+                        "client_id": client_id,
+                        "client_secret": client_secret,
+                        "params": {
+                            "fields": fields,
+                            "start_time": start,
+                            "stop_time": stop,
+                        }
+                     }
 
-        with open(config_file, 'w') as cfg:
-            json.dump(config, cfg)
-
-    if not (client_id or client_secret) and os.path.exists(filename):
-        with open(filename) as cfg:
-            data = json.load(cfg)
-
-            client_id = data['client_id']
-            client_secret = data['client_secret']
-            fields = data['params']['fields']
-            start_time = data['params']['start_time']
-            stop_time = data['params']['stop_time']
+            with open(filename, 'w') as cfg:
+                json.dump(config, cfg)
 
     ctx.obj = {
         'client_id': client_id,
@@ -160,7 +199,7 @@ def request(ctx, host_ip):
     """
     client_id = ctx.obj['client_id']
     client_secret = ctx.obj['client_secret']
-    params = ctx.obj['params']
+    params = {'fields': ctx.obj['fields'], 'start_time': ctx.obj['start_time'], 'stop_time': ctx.obj['stop_time']}
 
     api_call = api.Call(host_ip, client_id, client_secret, params)
     # access_token = api.auth.generate_api_session(host_ip, client_id, client_secret)
