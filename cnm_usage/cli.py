@@ -45,8 +45,55 @@ class ClientSecret(click.ParamType):
         return value
     '''
 
+
 class Fields(click.ParamType):
     name = 'fields'
+
+
+class StartTime(click.ParamType):
+    name = 'start'
+
+    def convert(self, value, param, ctx):
+        try:
+            v = int(value)
+            if v >= 7:
+                return (datetime.now() - timedelta(int(value))).strftime('%Y-%m-%d') + 'T00:00:00-05:00'
+            else:
+                raise ValueError(f"{value!r} is not a valid integer. start time must be less than 7 days ago")
+
+        except TypeError:
+            self.fail(
+                "expected string for int() conversion, got "
+                f"{value!r} of type {type(value).__name__}",
+                param,
+                ctx,
+            )
+
+        except ValueError:
+            self.fail(f"{value!r} is not a valid integer", param, ctx)
+
+
+class StopTime(click.ParamType):
+    name = 'stop'
+
+    def convert(self, value, param, ctx):
+        try:
+            v = int(value)
+            if v >= 7:
+                return (datetime.now() - timedelta(int(value))).strftime('%Y-%mw-%d') + 'T23:00:00-05:00'
+            else:
+                raise ValueError(f"{value!r} is not a valid integer. stop time must be less than 7 days ago")
+
+        except TypeError:
+            self.fail(
+                "expected string for int() conversion, got "
+                f"{value!r} of type {type(value).__name__}",
+                param,
+                ctx,
+            )
+
+        except ValueError:
+            self.fail(f"{value!r} is not a valid integer", param, ctx)
 
 '''
 Define command options to pass client id, client secret, and a config file.
@@ -76,17 +123,15 @@ or a config file name.
     default='name,timestamp,radio.dl_kbits,radio.ul_kbits',
     help="Fields to pull from the cnMaestro API"
 )
-
 @click.option(
     '--start', '-a',
-    type=str,
-    default=(datetime.now() - timedelta(1)).strftime('%Y-%m-%d') + 'T00:00:00-05:00',
+    type=StartTime(),
+    default='7',
 )
-
 @click.option(
     '--stop', '-o',
-    type=str,
-    default=(datetime.now() - timedelta(1)).strftime('%Y-%mw-%d') + 'T23:00:00-05:00',
+    type=StopTime(),
+    default='1',
 )
 
 @click.pass_context
