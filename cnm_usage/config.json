@@ -1,1 +1,1 @@
-{"client_id": "1234", "client_secret": "123456", "params": {"fields": "a,b,c", "start_time": "1", "stop_time": "2"}}
+{"client_id": "LSaNKGIUtYfJO4Uq", "client_secret": "SDtBmkPPfx0C6CfBfMIbqYNM2p1C1z", "params": {"fields": "name,timestamp,radio.dl_kbits,radio.ul_kbits", "start_time": "7", "stop_time": "1"}}
