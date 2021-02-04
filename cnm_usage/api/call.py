@@ -12,12 +12,12 @@ class Call:
             'Authorization': 'Bearer {}'.format(self.token),
         }
 
-        def refreshToken(self):
-            self.token = generate_api_session(self.host, self.client_id, self.client_secret)
+    def refreshToken(self):
+        self.token = generate_api_session(self.host, self.client_id, self.client_secret)
 
-        def getPerformance(self):
-            api_url = 'https://{}/api/v1/devices/performance'.format(self.host)
+    def getPerformance(self):
+        api_url = 'https://{}/api/v1/devices/performance'.format(self.host)
 
-            r = requests.get(api_url, self.headers, self.params, verify=False)
-            check_http_return("API", api_url, r.status_code, r)
-            return r.json()
+        r = requests.get(api_url, headers=self.headers, params=self.params, verify=False)
+        check_http_return("API", api_url, r.status_code, r)
+        return r.json()

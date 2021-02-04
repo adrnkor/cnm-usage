@@ -56,7 +56,7 @@ class StartTime(click.ParamType):
     def convert(self, value, param, ctx):
         try:
             v = int(value)
-            if v >= 7:
+            if v <= 7:
                 return (datetime.now() - timedelta(int(value))).strftime('%Y-%m-%d') + 'T00:00:00-05:00'
             else:
                 raise ValueError(f"{value!r} is not a valid integer. start time must be less than 7 days ago")
@@ -79,7 +79,7 @@ class StopTime(click.ParamType):
     def convert(self, value, param, ctx):
         try:
             v = int(value)
-            if v >= 7:
+            if v <= 7:
                 return (datetime.now() - timedelta(int(value))).strftime('%Y-%mw-%d') + 'T23:00:00-05:00'
             else:
                 raise ValueError(f"{value!r} is not a valid integer. stop time must be less than 7 days ago")
@@ -126,12 +126,12 @@ or a config file name.
 @click.option(
     '--start', '-a',
     type=StartTime(),
-    default='7',
+    default=7,
 )
 @click.option(
     '--stop', '-o',
     type=StopTime(),
-    default='1',
+    default=1,
 )
 
 @click.pass_context
@@ -247,6 +247,7 @@ def request(ctx, host_ip):
     params = {'fields': ctx.obj['fields'], 'start_time': ctx.obj['start_time'], 'stop_time': ctx.obj['stop_time']}
 
     api_call = api.Call(host_ip, client_id, client_secret, params)
+    api_call.getPerformance()
     # access_token = api.auth.generate_api_session(host_ip, client_id, client_secret)
     print("Nice!")
 
