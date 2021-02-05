@@ -15,9 +15,16 @@ class Call:
     def refreshToken(self):
         self.token = generate_api_session(self.host, self.client_id, self.client_secret)
 
-    def getPerformance(self):
-        api_url = 'https://{}/api/v1/devices/performance'.format(self.host)
+    def getPerformance(self, limit=100, offset=0):
+        api_url = 'https://{}/api/v1/devices/performance?offset={}&limit={}'.format(self.host, offset, limit)
 
         r = requests.get(api_url, headers=self.headers, params=self.params, verify=False)
+        check_http_return("API", api_url, r.status_code, r)
+        return r.json()
+
+    def getDevices(self, limit=100, offset=0):
+        api_url = 'https://{}/api/v1/devices?offset={}&limit={}'.format(self.host, offset, limit)
+
+        r = requests.get(api_url, headers=self.headers, params={}, verify=False)
         check_http_return("API", api_url, r.status_code, r)
         return r.json()
