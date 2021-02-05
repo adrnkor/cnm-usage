@@ -249,7 +249,22 @@ def request(ctx, host_ip):
     api_call = api.Call(host_ip, client_id, client_secret, params)
     call_json = api_call.getPerformance()
     print(call_json)
-    print("Nice!")
+
+    ''' testing
+    
+    test = api_call.getDevices()
+    print(test)
+    
+    offset = 0
+    path = os.path.expanduser("~/data")
+    if not os.path.exists(path):
+        os.mkdir(path)
+
+    end = not bool(call_json)
+    while not end:
+        pass
+        
+    '''
 
 
 if __name__ == "__main__":
