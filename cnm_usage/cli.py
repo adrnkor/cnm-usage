@@ -12,7 +12,7 @@ import json
 from cnm_usage import api
 from datetime import datetime, timedelta
 
-class ClientID(click.ParamType):
+class ClientId(click.ParamType):
     name = 'client-id'
     '''
     def convert(self, value, param, ctx):
@@ -51,7 +51,7 @@ class Fields(click.ParamType):
 
 
 class StartTime(click.ParamType):
-    name = 'start'
+    name = 'start_time'
 
     def convert(self, value, param, ctx):
         try:
@@ -74,7 +74,7 @@ class StartTime(click.ParamType):
 
 
 class StopTime(click.ParamType):
-    name = 'stop'
+    name = 'stop_time'
 
     def convert(self, value, param, ctx):
         try:
@@ -103,7 +103,7 @@ or a config file name.
 @click.group()
 @click.option(
     '--client-id', '-i',
-    type=ClientID(),
+    type=ClientId(),
     help='Client ID for the cnMaestro API',
 )
 @click.option(
@@ -124,18 +124,18 @@ or a config file name.
     help="Fields to pull from the cnMaestro API"
 )
 @click.option(
-    '--start', '-a',
+    '--start-time', '-a',
     type=StartTime(),
     default=7,
 )
 @click.option(
-    '--stop', '-o',
+    '--stop-time', '-o',
     type=StopTime(),
     default=1,
 )
 
 @click.pass_context
-def main(ctx, client_id, client_secret, config_file, fields, start, stop):
+def main(ctx, client_id, client_secret, config_file, fields, start_time, stop_time):
     """
     Start of program.
     Creates context object (ctx) from options or config file.
@@ -173,8 +173,8 @@ def main(ctx, client_id, client_secret, config_file, fields, start, stop):
                         "client_secret": client_secret,
                         "params": {
                             "fields": fields,
-                            "start_time": start,
-                            "stop_time": stop,
+                            "start_time": start_time,
+                            "stop_time": stop_time,
                         }
                      }
 
@@ -247,8 +247,8 @@ def request(ctx, host_ip):
     params = {'fields': ctx.obj['fields'], 'start_time': ctx.obj['start_time'], 'stop_time': ctx.obj['stop_time']}
 
     api_call = api.Call(host_ip, client_id, client_secret, params)
-    api_call.getPerformance()
-    # access_token = api.auth.generate_api_session(host_ip, client_id, client_secret)
+    call_json = api_call.getPerformance()
+    print(call_json)
     print("Nice!")
 
 
