@@ -1,5 +1,5 @@
 # cnMaestro sample API test code
-# reworked by Sal K (Dec 2020/Jan 2021)
+# reworked by Sal K (Jan 2021)
 
 # "API test code for cnMaestro that demonstrates session establishment and API
 # api. The client connects to cnMaestro using the Client Id and Client
@@ -12,10 +12,6 @@ import sys
 import requests
 import json
 import base64
-
-# LIVE: 208.93.184.19
-# TEST: 208.93.184.17
-# TEST CREDS: (ID) LSaNKGIUtYfJO4Uq (SECRET) SDtBmkPPfx0C6CfBfMIbqYNM2p1C1z
 
 def check_http_return(section, url, code, request):
     if int(code) != 200:
@@ -67,7 +63,7 @@ def generate_api_session(host, client_id, client_secret):
     return access_token
 
 
-# Execute API using URL returned in access parameters.
+# Execute API using URL returned in access parameters. Currently unused
 def call_api(host, path, access_token):
     api_url = 'https://{}{}'.format(host, path)
     headers = {
