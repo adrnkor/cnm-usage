@@ -124,14 +124,16 @@ or a config file name.
     help="Fields to pull from the cnMaestro API"
 )
 @click.option(
-    '--start-time', '-a',
+    '--start-date', '-a',
     type=StartTime(),
     default=7,
+    help="First day to pull data from ( __ days ago @ T00:00:00-05:00). Default: 7, Max: 7."
 )
 @click.option(
-    '--stop-time', '-o',
+    '--stop-date', '-o',
     type=StopTime(),
     default=1,
+    help="Last day to pull data from ( __ days ago @ T23:00:00-05:00). Default: 1, Max: 7."
 )
 
 @click.pass_context
