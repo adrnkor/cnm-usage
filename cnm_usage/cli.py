@@ -7,6 +7,7 @@
 
 import os
 import sys
+import re
 import click
 import json
 from cnm_usage import api
@@ -14,36 +15,34 @@ from datetime import datetime, timedelta
 
 class ClientId(click.ParamType):
     name = 'client-id'
-    '''
+
     def convert(self, value, param, ctx):
-        found = re.match(r'[0-9a-f]{16}', value)
+        found = re.match(r'[0-9a-z]{16}', value)
 
         if not found:
             self.fail(
-                f'{value} is not a 16-character hexadecimal string',
+                f'{value} is not a valid client ID',
                 param,
                 ctx,
             )
 
         return value
-    '''
+
 
 class ClientSecret(click.ParamType):
     name = 'client-secret'
 
-    '''
     def convert(self, value, param, ctx):
-        found = re.match(r'[0-9a-f]{30}', value)
+        found = re.match(r'[0-9a-z]{30}', value)
 
         if not found:
             self.fail(
-                f'{value} is not a 30-character hexadecimal string',
+                f'{value} is not a valid client secret',
                 param,
                 ctx,
             )
 
         return value
-    '''
 
 
 class Fields(click.ParamType):
@@ -94,6 +93,7 @@ class StopTime(click.ParamType):
 
         except ValueError:
             self.fail(f"{value!r} is not a valid integer", param, ctx)
+
 
 '''
 Define command options to pass client id, client secret, and a config file.
@@ -232,7 +232,6 @@ def config(ctx):
 
     with open(config_file, 'w') as cfg:
         json.dump(config, cfg)
-        #cfg.writelines([client_id, '\n'+client_secret])
 
 
 @main.command()
@@ -240,31 +239,22 @@ def config(ctx):
 @click.pass_context
 def request(ctx, host_ip):
     """
-    Generate and authenticate an API access token.
+    Generate and authenticate an API access token, call the API
     """
+
+    # Set variables necessary for making an API call
     client_id = ctx.obj['client_id']
     client_secret = ctx.obj['client_secret']
     params = {'fields': ctx.obj['fields'], 'start_time': ctx.obj['start_time'], 'stop_time': ctx.obj['stop_time']}
 
+    # Create the API Call object
     api_call = api.Call(host_ip, client_id, client_secret, params)
-    call_json = api_call.getPerformance()
-    print(call_json)
 
-    ''' testing
-    
-    test = api_call.getDevices()
-    print(test)
-    
-    offset = 0
-    path = os.path.expanduser("~/data")
-    if not os.path.exists(path):
-        os.mkdir(path)
-
-    end = not bool(call_json)
-    while not end:
-        pass
-        
-    '''
+    # Call the API
+    call_response_perf = api_call.getPerformance()
+    call_response_dev = api_call.getDevices()
+    # print(call_response_perf)
+    # print(call_response_devices)
 
 
 if __name__ == "__main__":
