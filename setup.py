@@ -2,7 +2,6 @@
     script named get_usage that will invoke the main
     method in the module cnm_usage.cnm_usage '''
 
-from distutils.core import setup
 from setuptools import setup, find_packages
 
 with open('README.md') as f:
