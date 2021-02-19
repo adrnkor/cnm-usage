@@ -10,7 +10,7 @@ This package must be manually installed by running the included setup.py script.
 It is recommended to install inside of a python virtual environment, such as venv. 
 
 ## Usage
-  #### Command:
+  ####
     cnm_usage [ -i \<client id> ] [ -s \<client secret> ] [ -p \<host ip> ] [ -c \<config file path> ] [ -f \<fields> ] [ -a \<start time> ] [ -o \<stop time> ] [ request ] [ config ]
   
   ### Commands
