@@ -1,8 +1,7 @@
 '''
     CLI for cnm_usage app
     example command:
-        > python cli.py -i <client id> -s <client secret> request <host ip>
-        -i LSaNKGIUtYfJO4Uq -s SDtBmkPPfx0C6CfBfMIbqYNM2p1C1z request 208.93.184.17
+        > python cli.py -i <client id> -s <client secret> -p <host ip> request
 '''
 
 import os
@@ -12,6 +11,7 @@ import click
 import json
 from cnm_usage import api
 from datetime import datetime, timedelta
+
 
 class ClientId(click.ParamType):
     name = 'client-id'
@@ -128,13 +128,13 @@ be passed in through the command line or found in a specified config file.
     help="Fields to pull from the cnMaestro API. Field names must be separated by a comma, with no spaces."
 )
 @click.option(
-    '--start-date', '-a',
+    '--start-time', '-a',
     type=StartTime(),
     default=7,
     help="First day to pull data from ( __ days ago @ T00:00:00-05:00). Default: 7, Max: 7"
 )
 @click.option(
-    '--stop-date', '-o',
+    '--stop-time', '-o',
     type=StopTime(),
     default=1,
     help="Last day to pull data from ( __ days ago @ T23:00:00-05:00). Default: 1, Max: 7"
