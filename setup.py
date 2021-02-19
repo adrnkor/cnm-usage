@@ -11,7 +11,7 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        get_usage=cnm_usage.cli:main
+        cnm_usage=cnm_usage.cli:main
     ''',
 
     author='Sal Koritz',
