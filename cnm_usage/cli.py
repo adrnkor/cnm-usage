@@ -96,20 +96,24 @@ class StopTime(click.ParamType):
 
 
 '''
-Define command options to pass client id, client secret, and a config file.
-Options are optional, so the user can pass in either a client id and a client secret
-or a config file name.
+Define command options to pass in values. client-id, client_secret, and host_ip do not have default values and must either
+be passed in through the command line or found in a specified config file.
 '''
 @click.group()
 @click.option(
     '--client-id', '-i',
     type=ClientId(),
-    help='Client ID for the cnMaestro API',
+    help='Client ID for the cnMaestro API.',
 )
 @click.option(
     '--client-secret', '-s',
     type=ClientSecret(),
-    help='Client secret for the cnMaestro API',
+    help='Client secret for the cnMaestro API.',
+)
+@click.option(
+    '--host-ip', '-p',
+    type=str,
+    help='Host ip to call the API.',
 )
 @click.option(
     '--config-file', '-c',
@@ -121,30 +125,35 @@ or a config file name.
     '--fields', '-f',
     type=str,
     default='name,timestamp,radio.dl_kbits,radio.ul_kbits',
-    help="Fields to pull from the cnMaestro API"
+    help="Fields to pull from the cnMaestro API. Field names must be separated by a comma, with no spaces."
 )
 @click.option(
     '--start-date', '-a',
     type=StartTime(),
     default=7,
-    help="First day to pull data from ( __ days ago @ T00:00:00-05:00). Default: 7, Max: 7."
+    help="First day to pull data from ( __ days ago @ T00:00:00-05:00). Default: 7, Max: 7"
 )
 @click.option(
     '--stop-date', '-o',
     type=StopTime(),
     default=1,
-    help="Last day to pull data from ( __ days ago @ T23:00:00-05:00). Default: 1, Max: 7."
+    help="Last day to pull data from ( __ days ago @ T23:00:00-05:00). Default: 1, Max: 7"
 )
 
 @click.pass_context
-def main(ctx, client_id, client_secret, config_file, fields, start_time, stop_time):
+def main(ctx, client_id, client_secret, host_ip, config_file, fields, start_time, stop_time):
     """
-    Start of program.
-    Creates context object (ctx) from options or config file.
+    Program to pull usage/performance data from the cnMaestro API. Pulls a maximum of 100 entries per call, within a time window starting at most one week ago."
+    Note: Full functionality from the command line is not supported. The code will need to be edited directly to change some settings, such as request limits and offsets. This program should be further developed before it is used.
     """
     filename = os.path.expanduser(config_file)
 
     if os.path.exists(filename):
+        if not host_ip:
+            with open(filename) as cfg:
+                data = json.load(cfg)
+                host_ip = data['host_ip']
+
         if not (client_id and client_secret):
             with open(filename) as cfg:
                 data = json.load(cfg)
@@ -154,8 +163,9 @@ def main(ctx, client_id, client_secret, config_file, fields, start_time, stop_ti
                 fields = data['params']['fields']
                 start_time = data['params']['start_time']
                 stop_time = data['params']['stop_time']
+
         else:
-            print("{} exists, but a different client id and client secret was supplied.".format(filename))
+            print("{} exists, but a different client id and client secret was supplied. Using the ones supplied...".format(filename))
             with open(filename) as cfg:
                 data = json.load(cfg)
 
@@ -164,15 +174,16 @@ def main(ctx, client_id, client_secret, config_file, fields, start_time, stop_ti
                 stop_time = data['params']['stop_time']
 
     if not os.path.exists(filename):
-        if not (client_id and client_secret):
-            print("{} does not exist. Aborting...".format(filename))
+        if not (client_id and client_secret and host_ip):
+            print("{} does not exist, and necessary input was not supplied. Aborting...".format(filename))
             sys.exit()
         else:
-            print("{} does not exist. A config file can be created.".format(filename))
+            print("{} does not exist. A config file can be created from the information given.".format(filename))
             click.confirm("Do you want to continue?", abort=True)
             config = {
                         "client_id": client_id,
                         "client_secret": client_secret,
+                        "host_ip": host_ip,
                         "params": {
                             "fields": fields,
                             "start_time": start_time,
@@ -186,6 +197,7 @@ def main(ctx, client_id, client_secret, config_file, fields, start_time, stop_ti
     ctx.obj = {
         'client_id': client_id,
         'client_secret': client_secret,
+        'host_ip': host_ip,
         'config_file': filename,
         'fields': fields,
         'start_time': start_time,
@@ -196,8 +208,8 @@ def main(ctx, client_id, client_secret, config_file, fields, start_time, stop_ti
 @click.pass_context
 def config(ctx):
     """
-    Prompts user to enter client id and client secret, stores these values in a file.
-    Filename defined by the --config-file option
+    Create a new config file, or overwrite an existing one. File path defined by --config-file PATH
+    To skip a setting and have it be set as the default option, press Return.
     """
     config_file = ctx.obj['config_file']
 
@@ -208,6 +220,10 @@ def config(ctx):
     client_secret = click.prompt(
         "Please enter your Client Secret",
         default=ctx.obj.get('client_secret', '')
+    )
+    host_ip = click.prompt(
+        "Please enter the host IP",
+        default=ctx.obj.get('host_ip', '')
     )
     fields = click.prompt(
         "Please enter the fields to retrieve",
@@ -225,6 +241,7 @@ def config(ctx):
     config = {
                 "client_id": client_id,
                 "client_secret": client_secret,
+                "host_ip": host_ip,
                 "params": {
                     "fields": fields,
                     "start_time": start_time,
@@ -237,16 +254,17 @@ def config(ctx):
 
 
 @main.command()
-@click.argument('host_ip')
 @click.pass_context
-def request(ctx, host_ip):
+def request(ctx):
     """
-    Generate and authenticate an API access token, call the API
+    Request the cnMaestro API using the given host IP.
+    Generates and authenticates an API access token, calls the API, then prints the json response.
     """
 
     # Set variables necessary for making an API call
     client_id = ctx.obj['client_id']
     client_secret = ctx.obj['client_secret']
+    host_ip = ctx.obj['host_ip']
     params = {'fields': ctx.obj['fields'], 'start_time': ctx.obj['start_time'], 'stop_time': ctx.obj['stop_time']}
 
     # Create the API Call object
@@ -254,8 +272,9 @@ def request(ctx, host_ip):
 
     # Call the API
     call_response_perf = api_call.getPerformance()
-    call_response_dev = api_call.getDevices()
-    # print(call_response_perf)
+    # call_response_dev = api_call.getDevices()
+
+    print(call_response_perf)
     # print(call_response_devices)
 
 
