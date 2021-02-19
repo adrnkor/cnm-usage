@@ -17,7 +17,7 @@ class ClientId(click.ParamType):
     name = 'client-id'
 
     def convert(self, value, param, ctx):
-        found = re.match(r'[0-9a-z]{16}', value)
+        found = re.match(r'[0-9a-zA-Z]{16}', value)
 
         if not found:
             self.fail(
@@ -33,7 +33,7 @@ class ClientSecret(click.ParamType):
     name = 'client-secret'
 
     def convert(self, value, param, ctx):
-        found = re.match(r'[0-9a-z]{30}', value)
+        found = re.match(r'[0-9a-zA-Z]{30}', value)
 
         if not found:
             self.fail(
@@ -113,7 +113,7 @@ be passed in through the command line or found in a specified config file.
 @click.option(
     '--host-ip', '-p',
     type=str,
-    help='Host ip to call the API.',
+    help='Host IP to call the API.',
 )
 @click.option(
     '--config-file', '-c',
@@ -257,8 +257,7 @@ def config(ctx):
 @click.pass_context
 def request(ctx):
     """
-    Request the cnMaestro API using the given host IP.
-    Generates and authenticates an API access token, calls the API, then prints the json response.
+    Request performance data from the cnMaestro API. Generates and authenticates an API access token, calls the API, then prints the json response.
     """
 
     # Set variables necessary for making an API call
