@@ -1,6 +1,6 @@
 # cnm-usage
 
-**CONFIG FILE OUT OF DATE ! I'll get around to that changing that...**
+**README FILE OUT OF DATE ! I'll get around to that changing that...**
 cli app to pull usage data from cnMaestro API.
 
 ## Usage
