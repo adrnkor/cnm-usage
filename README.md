@@ -1,10 +1,12 @@
 # cnm-usage
+
+**README FILE OUT OF DATE ! I'll get around to that changing that...**
 cli app to pull usage data from cnMaestro API.
 
 ## Usage
 
 #### Currently works by directly calling the cli.py script.
-   \> python cli.py \[ -i \<client id> ] \[ -s \<client secret> ] \[ -c \<config file path> ] \[ request \<host ip> ] \[ config ]
+   \> python cli.py \[ -i \<client id> ] \[ -s \<client secret> ] \[ -c \<config file path> ] \[ request ] \[ config ]
   
   ### arguments
   #### request
@@ -23,11 +25,3 @@ cli app to pull usage data from cnMaestro API.
   #### option -c or --config-file
     takes a file path. if the config argument is included and the file does not exist, it is created. if the request argument is included and the -i and -s options     are not both set, the config file is used; if the -i and -s options are both set, the config file is not used. if the request argument is included and options
     -i, -s, and -c are not specified, the program will look for a config file at the default location ('./.auth.cfg')
-  
-
-## To Do
-####  Research:
-  - App project/folder structure and best practices, reorganize if needed
-  - How to write setup.py w/ entry points for a cli app
-  - How to securely store client id/client secret, if nessesary
-  - How to best incorporate a "main script" to make api calls and fetch + store date
