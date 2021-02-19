@@ -1,5 +1,6 @@
-# cnMaestro sample API test code
-# reworked by Sal K (Jan 2021)
+# cnMaestro sample API test code. Found on page 86-87 of the cnMaestro 2.4.1 RESTful API documentation
+# Copyright (C) 2017 Cambium Networks, LTD.
+# Implemented/reworked by Sal K
 
 # "API test code for cnMaestro that demonstrates session establishment and API
 # api. The client connects to cnMaestro using the Client Id and Client
