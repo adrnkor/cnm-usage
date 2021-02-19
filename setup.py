@@ -1,8 +1,5 @@
 from setuptools import setup, find_packages
 
-with open('README.md', 'r') as f:
-    readme = f.read()
-
 setup(
     name="cnm_usage",
     version='0.1',
@@ -19,5 +16,4 @@ setup(
 
     author="Sal Koritz",
     description='cli app to pull usage data from cnMaestro API',
-    long_description=readme,
 )
