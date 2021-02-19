@@ -40,7 +40,7 @@ It is recommended to install inside of a python virtual environment, such as ven
   Takes an integer, representing the first day to pull data from ( __ days ago @ T00:00:00-05:00). Default: 7, Max: 7
      
   #### -o or --stop-time
-     Takes an integer, representing the last day to pull data from ( __ days ago @ T23:00:00-05:00). Default: 1, Max: 7
+  Takes an integer, representing the last day to pull data from ( __ days ago @ T23:00:00-05:00). Default: 1, Max: 7
   
   #### --help
-     Display the help menu
+  Display the help menu
