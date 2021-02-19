@@ -1,2 +1,2 @@
-// an outline of how a valid config file is structured
+(this is an outline of how a valid config file is structured, not a functional config file!)
 {"client_id": "", "client_secret": "", "host_ip": "", "params": {"fields": "name,timestamp,radio.dl_kbits,radio.ul_kbits", "start_time": "7", "stop_time": "1"}}
