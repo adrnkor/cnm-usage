@@ -1,7 +1,3 @@
-''' instructs setup.py to create a
-    script named get_usage that will invoke the main
-    method in the module cnm_usage.cnm_usage '''
-
 from setuptools import setup, find_packages
 
 with open('README.md') as f:
@@ -10,7 +6,6 @@ with open('README.md') as f:
 setup(
     name="cnm_usage",
     version='0.1',
-    #py_modules=['hello'],
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
