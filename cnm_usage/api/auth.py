@@ -1,4 +1,4 @@
-# cnMaestro sample API test code. Found on page 86-87 of the cnMaestro 2.4.1 RESTful API documentation
+# cnMaestro sample API test code. From page 86-87 of the cnMaestro 2.4.1 RESTful API documentation
 # Copyright (C) 2017 Cambium Networks, LTD.
 # Implemented/reworked by Sal K
 
