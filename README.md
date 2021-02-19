@@ -6,7 +6,8 @@ CLI app to pull usage/performance data from cnMaestro API. It calls /api/v1/devi
 
 ## Installation
 This package must be manually installed by running the included setup.py script. Run this command while inside the cnm-usage directory:
-      \> python3 setup.py install
+#### 
+      python3 setup.py install
 It is recommended to install inside of a python virtual environment, such as venv. 
 
 ## Usage
