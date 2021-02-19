@@ -19,7 +19,7 @@ It is recommended to install inside of a python virtual environment, such as ven
   Request performance data from the cnMaestro API. Requires either a valid config file, or at least a client id, client secret, and host ip. If a config file does not include a client id or client secret, a client id and secret can be passed in as options while the other config file values are used (useful if you don't want to save sensitive data).
   
   #### config
-  Create a new config file, or overwrite an existing one. Prompts user for client id, client secret, host ip, fields, start time, and stop time. By default, new config files are created in the user's home directory.
+  Create a new config file, or overwrite an existing one. Prompts user for client id, client secret, host ip, fields, start time, and stop time. By default, new config files are created in the user's home directory. Use option -c to specify a file path, or the default will be used.
     
   ### Options 
   #### -i or --client-id
