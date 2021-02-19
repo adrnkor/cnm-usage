@@ -1,6 +1,6 @@
 # cnm-usage
 
-CLI app to pull usage/performance data from cnMaestro API. It calls /api/v1/devices/performance and pulls a maximum of 100 entries per call, within a time window starting at most one week ago.
+A simple CLI app to pull usage/performance data from the cnMaestro API. It calls /api/v1/devices/performance and pulls a maximum of 100 entries per call, within a time window starting at most one week ago.
 
 **Note:** Full functionality from the command line is not supported. The code will need to be edited directly to change some settings, such as request limits and offsets. This program should be further developed before it is used.
 
