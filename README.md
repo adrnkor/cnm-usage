@@ -1,9 +1,9 @@
 # cnm-usage
+
+**CONFIG FILE OUT OF DATE ! I'll get around to that changing that...**
 cli app to pull usage data from cnMaestro API.
 
 ## Usage
-
-**CONFIG FILE OUT OF DATE ! I'll get around to that changing that...**
 
 #### Currently works by directly calling the cli.py script.
    \> python cli.py \[ -i \<client id> ] \[ -s \<client secret> ] \[ -c \<config file path> ] \[ request ] \[ config ]
