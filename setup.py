@@ -14,6 +14,6 @@ setup(
         cnm_usage=cnm_usage.cli:main
     ''',
 
-    author='Sal Koritz',
+    author='Adrien Koritz',
     description='cli app to pull usage data from cnMaestro API'
 )
